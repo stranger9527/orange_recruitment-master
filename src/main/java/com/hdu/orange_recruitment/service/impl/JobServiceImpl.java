@@ -36,8 +36,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     private EnterpriseService enterpriseService;
     @Autowired
     private UserService userService;
-    @Autowired
-    private ProgressService progressService;
+
 
 
     /**
@@ -74,6 +73,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
                     userLambdaQueryWrapper.eq(User::getId, job.getUserHrId());
                     User user = userService.getOne(userLambdaQueryWrapper);
 
+                    jobVo.setUserHrName(user.getName());
                     jobVo.setEnterpriseId(enterpriseStaff.getEnterpriseId());
                     jobVo.setEnterpriseName(enterprise.getName());
                     jobVo.setAvatar(user.getAvatar());
@@ -105,72 +105,5 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
         return getOne(lambdaQueryWrapper);
     }
 
-    @Override
-    public IPage<JobVo> getChattedPage(int pageNum, int pageSize) {
 
-        return getPageByStatus(pageNum, pageSize, "沟通过");
-    }
-
-    @Override
-    public IPage<JobVo> getSubmittedPage(int pageNum, int pageSize) {
-
-        return getPageByStatus(pageNum, pageSize, "简历已投递");
-    }
-
-    @Override
-    public IPage<JobVo> getFavoritesPage(int pageNum, int pageSize) {
-        return getPageByStatus(pageNum, pageSize, "收藏");
-    }
-
-    private IPage<JobVo> getPageByStatus(int pageNum, int pageSize, String status) {
-
-        int id = ThreadLocalUtils.getId();
-        IPage<Job> page = new Page<>(pageNum, pageSize);
-        //获取当前用户沟通过的岗位的id列表
-        LambdaQueryWrapper<Progress> progressLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        progressLambdaQueryWrapper.select(Progress::getJobId)
-                .eq(Progress::getUserCandidateId, id)
-                .like(Progress::getStatus, ProgressStatusConstants.getIdByStatus(status));
-        List<Progress> progressList = progressService.list(progressLambdaQueryWrapper);
-        if (progressList.isEmpty()) { return new Page<JobVo>(pageNum, pageSize); }
-        List<Integer> jobIdList = progressList.stream()
-                .map(Progress::getJobId).collect(Collectors.toList());
-
-        LambdaQueryWrapper<Job> jobLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        jobLambdaQueryWrapper.in(Job::getId, jobIdList);
-        IPage<Job> jobPage = page(page, jobLambdaQueryWrapper); // 调用 page 方法
-        jobPage.setTotal(jobPage.getRecords().size()); //获取总数
-
-        List<JobVo> jobVos = jobPage.getRecords().stream()
-                .map(job -> {
-                    JobVo jobVo = new JobVo();
-                    BeanUtils.copyProperties(job, jobVo);
-
-                    //EnterpriseStaff
-                    LambdaQueryWrapper<EnterpriseStaff> enterpriseStaffLambdaQueryWrapper = new LambdaQueryWrapper<>();
-                    enterpriseStaffLambdaQueryWrapper.eq(EnterpriseStaff::getUserId, job.getUserHrId());
-                    EnterpriseStaff enterpriseStaff = enterpriseStaffService.getOne(enterpriseStaffLambdaQueryWrapper);
-                    //Enterprise
-                    LambdaQueryWrapper<Enterprise> enterpriseLambdaQueryWrapper = new LambdaQueryWrapper<>();
-                    enterpriseLambdaQueryWrapper.eq(Enterprise::getId, enterpriseStaff.getEnterpriseId());
-                    Enterprise enterprise = enterpriseService.getOne(enterpriseLambdaQueryWrapper);
-                    //User
-                    LambdaQueryWrapper<User> userLambdaQueryWrapper = new LambdaQueryWrapper<>();
-                    userLambdaQueryWrapper.eq(User::getId, job.getUserHrId());
-                    User user = userService.getOne(userLambdaQueryWrapper);
-
-                    jobVo.setEnterpriseId(enterpriseStaff.getEnterpriseId());
-                    jobVo.setEnterpriseName(enterprise.getName());
-                    jobVo.setAvatar(user.getAvatar());
-                    jobVo.setPosition(enterpriseStaff.getPosition());
-
-                    return jobVo;
-                }).collect(Collectors.toList());
-
-        IPage<JobVo> jobVoPage = new Page<>(pageNum, pageSize);
-        jobVoPage.setRecords(jobVos);
-        jobVoPage.setTotal(jobPage.getTotal());
-
-        return jobVoPage;
-    }
 }

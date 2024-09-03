@@ -3,11 +3,8 @@ package com.hdu.orange_recruitment.controller;
 import com.hdu.orange_recruitment.entity.R;
 import com.hdu.orange_recruitment.service.ProgressService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -30,4 +27,19 @@ public class ProgressController {
         progressService.submit(id);
         return R.ok();
     }
+
+//    @GetMapping
+//    public R getProgressByStatus(int status, int pageNum, int pageSize) {
+//
+//        return R.success(progressService.getProgressByStatus(status, pageNum, pageSize));
+//    }
+
+    @GetMapping
+    public R getProgress(int qualification , int basicSalary, int status, int pageNum, int pageSize) {
+
+        //根据状态码筛选后，再根据学历和底薪筛选
+        return R.success(progressService.getProgress(qualification, basicSalary, progressService.getProgressByStatus(status, pageNum, pageSize)));
+    }
+
+
 }

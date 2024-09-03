@@ -21,33 +21,10 @@ public class JobController {
     @Autowired
     private JobService jobService;
 
-    @GetMapping("/page")
+    @GetMapping
     public R search(int pageNum, int pageSize, String kw) {
 
         return R.success(jobService.getPage(pageNum, pageSize, kw));
-    }
-
-    @GetMapping("/page/chatted")
-    public R getChatted(int pageNum, int pageSize) {
-
-        return R.success(jobService.getChattedPage(pageNum, pageSize));
-    }
-    @GetMapping("/page/submitted")
-    public R getSubmitted(int pageNum, int pageSize) {
-
-        return R.success(jobService.getSubmittedPage(pageNum, pageSize));
-    }
-
-//    @GetMapping("/page/interviews")
-//    public R getInterviews(int pageNum, int pageSize) {
-//
-//        return R.success(jobService.getInterviewsPage(pageNum, pageSize));
-//    }
-
-    @GetMapping("/page/favorites")
-    public R getFavorites(int pageNum, int pageSize) {
-
-        return R.success(jobService.getFavoritesPage(pageNum, pageSize));
     }
 
     @GetMapping("/{id}")

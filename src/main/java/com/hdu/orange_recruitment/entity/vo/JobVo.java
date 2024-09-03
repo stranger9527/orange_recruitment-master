@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 @Data
 public class JobVo extends Job {
 
+    private String userHrName;
+
     private Integer enterpriseId;
 
     private String enterpriseName;

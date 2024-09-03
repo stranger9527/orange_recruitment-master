@@ -17,12 +17,7 @@ public interface JobService extends IService<Job> {
 
     IPage<JobVo> getPage(int pageNum, int pageSize, String kw);
 
-
     Job getDetail(Long id);
 
-    IPage<JobVo> getChattedPage(int pageNum, int pageSize);
 
-    IPage<JobVo> getSubmittedPage(int pageNum, int pageSize);
-
-    IPage<JobVo> getFavoritesPage(int pageNum, int pageSize);
 }
