@@ -23,4 +23,6 @@ public interface ProgressService extends IService<Progress> {
 
 
     IPage<ProgressVo> getProgress(int qualification, int basicSalary, IPage<ProgressVo> progressVoByStatus);
+
+    void updateProgress(int jobId, String status, String action);
 }

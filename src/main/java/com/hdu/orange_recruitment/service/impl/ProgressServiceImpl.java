@@ -159,6 +159,41 @@ public class ProgressServiceImpl extends ServiceImpl<ProgressMapper, Progress> i
         return progressVoIPage;
     }
 
+    @Override
+    public void updateProgress(int jobId, String status, String action) { //action  add：添加  delete：删除
+
+        int userCandidateId = ThreadLocalUtils.getId();
+        LambdaQueryWrapper<Progress> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Progress::getUserCandidateId, userCandidateId).eq(Progress::getJobId, jobId); //获取当前用户和当前岗位的关系的记录
+        Progress progress = getOne(lambdaQueryWrapper);
+        if (progress == null) {
+            //如果当前用户和当前岗位没有关系，在查询时新建空白简历
+            Progress progress1 = new Progress();
+            progress1.setUserCandidateId(userCandidateId); //id、userHrId与jobId在hr设置岗位时已产生
+            progress1.setJobId(jobId);
+            progress1.setStatus(status); //添加action的值作为状态码
+            save(progress1);
+        }else {
+            //如果当前用户和当前岗位存在关系
+            LambdaUpdateWrapper<Progress> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+            Set<String> statusSet = Arrays.stream(progress.getStatus().split(","))
+                    .collect(Collectors.toSet());
+            if (action.equals("add")) {
+                statusSet.add(status); //set去重
+
+                if (Integer.parseInt(status) >= Integer.parseInt(ProgressStatusConstants.getIdByStatus("待评价"))) { // >=待评价-5
+                    //待面试-4 待评价-5 已发offer-6 确认入职-7 只能存在一个
+                    statusSet.remove(Integer.toString(Integer.parseInt(status)-1));
+                }
+            }else {
+                statusSet.remove(status);
+            }
+            String newStatus = StringUtils.join(statusSet, ",");
+            update(lambdaUpdateWrapper.set(Progress::getStatus, newStatus));
+
+        }
+    }
+
 
 //    @Override
 //    public IPage<ProgressVo> getProgress(int pageNum, int pageSize) {

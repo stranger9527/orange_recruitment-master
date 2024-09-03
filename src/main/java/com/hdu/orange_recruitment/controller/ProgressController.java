@@ -21,10 +21,17 @@ public class ProgressController {
     @Autowired
     private ProgressService progressService;
 
-    @PutMapping("/submit/{id}")
-    public R submit(@PathVariable Integer id) {
+//    @PutMapping("/submit/{id}")
+//    public R submit(@PathVariable Integer id) {
+//
+//        progressService.submit(id);
+//        return R.ok();
+//    }
 
-        progressService.submit(id);
+    @PutMapping
+    public R updateProgress(int jobId, String status, String action) {
+
+        progressService.updateProgress(jobId, status, action);
         return R.ok();
     }
 

@@ -37,5 +37,5 @@ public class ProgressStatusConstants {
         return Id2status.get(id);
     }
 
-    public static String getIdByStatus(String status){ return status2Id.get(status); }
+    public static String getIdByStatus(String status){ return status2Id.get(status);}
 }
