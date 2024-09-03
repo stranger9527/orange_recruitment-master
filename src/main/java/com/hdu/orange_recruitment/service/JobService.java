@@ -20,4 +20,9 @@ public interface JobService extends IService<Job> {
     Job getDetail(Long id);
 
 
+    void addJob(Job job);
+
+    void updateJob(Job job);
+
+    void deleteJob(Job job);
 }

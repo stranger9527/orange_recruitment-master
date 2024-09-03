@@ -8,7 +8,7 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author alpha
@@ -23,7 +23,7 @@ public class Job implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
-    private String userHrId;
+    private Integer userHrId;
 
     private String title;
 

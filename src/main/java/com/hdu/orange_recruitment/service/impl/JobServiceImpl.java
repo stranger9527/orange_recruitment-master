@@ -105,5 +105,24 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
         return getOne(lambdaQueryWrapper);
     }
 
+    @Override
+    public void addJob(Job job) {
+
+        job.setUserHrId(ThreadLocalUtils.getId());
+        save(job);
+    }
+
+    @Override
+    public void updateJob(Job job) {
+
+        job.setUserHrId(ThreadLocalUtils.getId());
+        updateById(job);
+    }
+
+    @Override
+    public void deleteJob(Job job) {
+        removeById(job);
+    }
+
 
 }

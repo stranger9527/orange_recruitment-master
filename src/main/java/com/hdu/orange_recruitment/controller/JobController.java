@@ -1,5 +1,6 @@
 package com.hdu.orange_recruitment.controller;
 
+import com.hdu.orange_recruitment.entity.Job;
 import com.hdu.orange_recruitment.entity.R;
 import com.hdu.orange_recruitment.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,25 @@ public class JobController {
         return R.success(jobService.getDetail(id));
     }
 
+    @PostMapping
+    public R addJob(@RequestBody Job job) {
+
+        jobService.addJob(job);
+        return R.ok();
+    }
+
+    @PutMapping
+    public R updateJob(@RequestBody Job job) {
+
+        jobService.updateJob(job);
+        return R.ok();
+    }
+
+    @DeleteMapping
+    public R deleteJob(@RequestBody Job job) {
+
+        jobService.deleteJob(job);
+        return R.ok();
+    }
 
 }
