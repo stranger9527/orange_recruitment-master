@@ -1,8 +1,11 @@
 package com.hdu.orange_recruitment.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
+import com.hdu.orange_recruitment.entity.Cv;
+import com.hdu.orange_recruitment.entity.R;
+import com.hdu.orange_recruitment.service.CvService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
@@ -13,7 +16,23 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2024-08-30
  */
 @RestController
-@RequestMapping("/cv")
+@RequestMapping("/user/cv")
 public class CvController {
 
+    @Autowired
+    private CvService cvService;
+
+    @GetMapping
+    public R getCv() {
+
+        Cv cv = cvService.getCv();
+        return R.success(cv);
+    }
+
+    @PutMapping
+    private R update(@RequestBody Cv cv){
+
+        cvService.update(cv);
+        return R.ok();
+    }
 }

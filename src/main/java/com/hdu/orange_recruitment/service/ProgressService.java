@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ProgressService extends IService<Progress> {
 
+    void submit(Integer id);
 }

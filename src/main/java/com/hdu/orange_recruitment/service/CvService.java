@@ -13,4 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface CvService extends IService<Cv> {
 
+    Cv getCv();
+
+    void update(Cv cv);
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author alpha
@@ -33,7 +33,7 @@ public class Progress implements Serializable {
     /**
      * 1：收藏 2：沟通过 3：简历已投递 4：待面试 5：待评价  6：已发offe 7：确认入职
      */
-    private String state;
+    private String status;
 
     private LocalDateTime interviewTime;
 
