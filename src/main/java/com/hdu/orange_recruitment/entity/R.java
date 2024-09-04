@@ -53,4 +53,10 @@ public class R extends HashMap<String, Object> implements Serializable {
     public static R success(Object object) {
         return ok().put("data", object);
     }
+    public static R success(String msg, Object object) {
+        R r = new R();
+        r.put("msg", msg);
+        r.put("data", object);
+        return r;
+    }
 }

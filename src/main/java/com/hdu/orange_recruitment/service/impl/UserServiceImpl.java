@@ -84,7 +84,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             System.out.println(operations.get(token));
 //            stringRedisTemplate.delete(token);
 //            System.out.println(operations.get(token));
-            return R.success(token);
+            return R.success(token, loginUser);
 //            return R.success(user);
         }
         return R.error("密码错误");
