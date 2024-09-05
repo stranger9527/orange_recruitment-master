@@ -10,6 +10,8 @@ public class ProgressVo extends Progress {
 
     private String jobTitle;
 
+    private String address;
+
     private String qualification;
 
     private String basicSalary;
