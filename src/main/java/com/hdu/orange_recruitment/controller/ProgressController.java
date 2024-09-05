@@ -29,9 +29,9 @@ public class ProgressController {
 //    }
 
     @PutMapping
-    public R updateProgress(int jobId, String status, String action) {
+    public R updateProgress(int userCandidateId, int jobId, String status, String action) {
 
-        progressService.updateProgress(jobId, status, action);
+        progressService.updateProgress(userCandidateId, jobId, status, action);
         return R.ok();
     }
 

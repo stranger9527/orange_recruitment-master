@@ -116,6 +116,7 @@ public class ProgressServiceImpl extends ServiceImpl<ProgressMapper, Progress> i
 
                     progressVo.setUserCandidateName(userCandidate.getName());
                     progressVo.setJobTitle(job.getTitle());
+                    progressVo.setAddress(job.getAddress());
                     progressVo.setQualification(cv.getQualification());
                     progressVo.setBasicSalary(cv.getBasicSalary());
                     progressVo.setEnterpriseId(enterprise.getId());
@@ -160,21 +161,21 @@ public class ProgressServiceImpl extends ServiceImpl<ProgressMapper, Progress> i
     }
 
     @Override
-    public void updateProgress(int jobId, String status, String action) { //action  add：添加  delete：删除
+    public void updateProgress(int userCandidateId, int jobId, String status, String action) { //action  add：添加  delete：删除
 
-        int userCandidateId = ThreadLocalUtils.getId();
+//        ThreadLocalUtils.getId();
         LambdaQueryWrapper<Progress> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(Progress::getUserCandidateId, userCandidateId).eq(Progress::getJobId, jobId); //获取当前用户和当前岗位的关系的记录
+        lambdaQueryWrapper.eq(Progress::getUserCandidateId, userCandidateId).eq(Progress::getJobId, jobId); //获取候选人用户和当前岗位的关系的记录
         Progress progress = getOne(lambdaQueryWrapper);
         if (progress == null) {
-            //如果当前用户和当前岗位没有关系，在查询时新建空白简历
+            //如果候选人用户和当前岗位没有关系，在查询时新建空白简历
             Progress progress1 = new Progress();
             progress1.setUserCandidateId(userCandidateId); //id、userHrId与jobId在hr设置岗位时已产生
             progress1.setJobId(jobId);
             progress1.setStatus(status); //添加action的值作为状态码
             save(progress1);
         }else {
-            //如果当前用户和当前岗位存在关系
+            //如果候选人用户和当前岗位存在关系
             LambdaUpdateWrapper<Progress> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
             Set<String> statusSet = Arrays.stream(progress.getStatus().split(","))
                     .collect(Collectors.toSet());
