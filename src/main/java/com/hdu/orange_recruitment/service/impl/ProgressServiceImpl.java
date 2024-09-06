@@ -78,8 +78,13 @@ public class ProgressServiceImpl extends ServiceImpl<ProgressMapper, Progress> i
         int id = ThreadLocalUtils.getId();
         //获取当前用户和当前岗位的存在status关系的列表
         LambdaQueryWrapper<Progress> progressLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        progressLambdaQueryWrapper.eq(Progress::getUserCandidateId, id)
-                .like(Progress::getStatus, status);
+        if (ThreadLocalUtils.getRole().equals("1")) {
+            progressLambdaQueryWrapper.eq(Progress::getUserCandidateId, id)
+                    .like(Progress::getStatus, status);
+        }else {
+            progressLambdaQueryWrapper.eq(Progress::getUserHrId, id)
+                    .like(Progress::getStatus, status);
+        }
         List<Progress> progressList = list(progressLambdaQueryWrapper);
         if (progressList.isEmpty()) { return new Page<ProgressVo>(pageNum, pageSize); }
 
@@ -190,7 +195,7 @@ public class ProgressServiceImpl extends ServiceImpl<ProgressMapper, Progress> i
                 statusSet.remove(status);
             }
             String newStatus = StringUtils.join(statusSet, ",");
-            update(lambdaUpdateWrapper.set(Progress::getStatus, newStatus));
+            update(lambdaUpdateWrapper.eq(Progress::getUserCandidateId, userCandidateId).set(Progress::getStatus, newStatus));
 
         }
     }
