@@ -108,20 +108,34 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     @Override
     public void addJob(Job job) {
 
-        job.setUserHrId(ThreadLocalUtils.getId());
-        save(job);
+        if (ThreadLocalUtils.getRole().equals("2")){
+            job.setUserHrId(ThreadLocalUtils.getId());
+            save(job);
+        }else {
+            System.out.println("权限不足");
+        }
     }
 
     @Override
     public void updateJob(Job job) {
 
-        job.setUserHrId(ThreadLocalUtils.getId());
-        updateById(job);
+        if (ThreadLocalUtils.getRole().equals("2")){
+            job.setUserHrId(ThreadLocalUtils.getId());
+            updateById(job);
+        }else {
+            System.out.println("权限不足");
+        }
+
     }
 
     @Override
     public void deleteJob(Job job) {
-        removeById(job);
+
+        if (ThreadLocalUtils.getRole().equals("2")){
+            removeById(job);
+        }else {
+            System.out.println("权限不足");
+        }
     }
 
 
