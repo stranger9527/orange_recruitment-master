@@ -28,8 +28,8 @@ public class ThreadLocalUtils {
         return  (Integer) map.get("id");
     }
 
-    public static String getPhone() {
+    public static String getRole() {
         Map<String,Object> map = ThreadLocalUtils.get();
-        return  (String) map.get("phone");
+        return  (String) map.get("role");
     }
 }

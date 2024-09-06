@@ -76,7 +76,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             //登录成功
             Map<String, Object> claims = new HashMap<>();
             claims.put("id", loginUser.getId());
-            claims.put("phone", loginUser.getPhone());
+            claims.put("role", loginUser.getRole());
             String token = JwtUtil.genToken(claims);
             //把token存储到redis中
             ValueOperations<String, String> operations = stringRedisTemplate.opsForValue();
