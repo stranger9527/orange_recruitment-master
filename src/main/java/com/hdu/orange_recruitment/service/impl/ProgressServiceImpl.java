@@ -173,9 +173,14 @@ public class ProgressServiceImpl extends ServiceImpl<ProgressMapper, Progress> i
         lambdaQueryWrapper.eq(Progress::getUserCandidateId, userCandidateId).eq(Progress::getJobId, jobId); //获取候选人用户和当前岗位的关系的记录
         Progress progress = getOne(lambdaQueryWrapper);
         if (progress == null) {
+
+            LambdaQueryWrapper<Job> jobLambdaQueryWrapper = new LambdaQueryWrapper<>();
+            jobLambdaQueryWrapper.eq(Job::getId, jobId);
+            Job job = jobService.getOne(jobLambdaQueryWrapper);
             //如果候选人用户和当前岗位没有关系，在查询时新建空白简历
             Progress progress1 = new Progress();
             progress1.setUserCandidateId(userCandidateId); //id、userHrId与jobId在hr设置岗位时已产生
+            progress1.setUserHrId(job.getUserHrId());
             progress1.setJobId(jobId);
             progress1.setStatus(status); //添加action的值作为状态码
             save(progress1);
@@ -195,7 +200,7 @@ public class ProgressServiceImpl extends ServiceImpl<ProgressMapper, Progress> i
                 statusSet.remove(status);
             }
             String newStatus = StringUtils.join(statusSet, ",");
-            update(lambdaUpdateWrapper.eq(Progress::getUserCandidateId, userCandidateId).set(Progress::getStatus, newStatus));
+            update(lambdaUpdateWrapper.eq(Progress::getUserCandidateId, userCandidateId).eq(Progress::getJobId, jobId).set(Progress::getStatus, newStatus));
 
         }
     }
